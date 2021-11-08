@@ -1,7 +1,11 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
+import Header from "./Layout/Header";
+import NotFound from "./Layout/NotFound"
 import Home from "./Home";
-import NoMatch from "./NoMatch";
+import CreateDeck from "./CreateDeck";
+import Study from "./Study";
+import Deck from "./Deck";
 
 /**
  * App is a wrapper for <Layout>, you should not need to change this file.
@@ -10,12 +14,22 @@ import NoMatch from "./NoMatch";
 function App() {
   return (
     <div className="app-routes">
+      <Header />
       <Switch>
-        <Route path="/">
+        <Route exact path="/">
           <Home />
         </Route>
+        <Route exact path="/decks/new">
+            <CreateDeck />
+        </Route>
+        <Route exact path="/decks/:deckId/study">
+            <Study />
+        </Route>
+        <Route exact path="/decks/:deckId">
+            <Deck />
+        </Route>
         <Route>
-          <NoMatch />
+          <NotFound />
         </Route>
       </Switch>
     </div>
