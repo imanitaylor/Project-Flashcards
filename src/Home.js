@@ -3,7 +3,6 @@ import { Route, Switch, Link } from "react-router-dom";
 
 import { listDecks } from "../src/utils/api";
 
-
 /*
 Include the Layout screen
 The path to this screen should be /.
@@ -28,18 +27,15 @@ function Home() {
     return () => ac.abort();
   }, [setDecks]);
 
- 
-//   const handleClick = (event) => {
-//     event.preventDefault();
-//     console.log("Submitted");
-//   };
+  //   const handleClick = (event) => {
+  //     event.preventDefault();
+  //     console.log("Submitted");
+  //   };
 
   return (
     <div className="app-routes">
-
       <Switch>
         <Route path="/">
-          
           <div className="container">
             <div>
               <Link to="/decks/new" className="btn btn-secondary btn-lg">
@@ -48,26 +44,37 @@ function Home() {
             </div>
             {decks.length > 0 &&
               decks.map((deck) => (
-                <div className="card" style={{ width: "100%" }}>
+                <div className="card p-2 m-3" style={{ width: "100%" }}>
                   <div className="card-body">
-                    <h5 className="card-title">{deck.name}</h5>
+                    <div className="row">
+                      <h5 className="col card-title">{deck.name}</h5>
+                      <h6 className="text-secondary">{decks.length} cards</h6>
+                    </div>
                     <p className="card-text">{deck.description}</p>
-                    <Link to={`/decks/${deck.id}`} className="btn btn-secondary">
-                      View
-                    </Link>
-                    <Link to={`/decks/${deck.id}/study`} className="btn btn-primary">
-                      Study
-                    </Link>
-                    <Link className="btn btn-danger">
-                      Delete
-                    </Link>
+                    <div className="row">
+                      <div className="col">
+                        <Link
+                          to={`/decks/${deck.id}`}
+                          className="btn btn-secondary m-2"
+                        >
+                          View
+                        </Link>
+                        <Link
+                          to={`/decks/${deck.id}/study`}
+                          className="btn btn-primary m-2"
+                        >
+                          Study
+                        </Link>
+                      </div>
+                      <div>
+                        <Link className="btn btn-danger m-2">Delete</Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
           </div>
         </Route>
-        
-        
       </Switch>
     </div>
   );
