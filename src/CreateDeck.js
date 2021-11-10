@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { createDeck } from "../src/utils/api";
 
 /*
 // allows the user to create a new deck
@@ -30,8 +31,12 @@ function CreateDeck() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Submitted:", formData);
-    setFormData({ ...initialFormState });
+    const deck = formData;
+    createDeck(deck)
+    .then(setFormData({ ...initialFormState }))
+    .then(history.push("/decks/:deckId"))
+    .catch(console.error)
+    
   };
 
   return (
@@ -93,7 +98,6 @@ function CreateDeck() {
             <button
               type="submit"
               className="btn btn-primary m-2"
-              onClick={() => history.push("/decks/:deckId")}
             >
               Submit
             </button>
