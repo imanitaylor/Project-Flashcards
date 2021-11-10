@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 /*
 // allows the user to create a new deck
@@ -9,8 +9,8 @@ import { Link } from "react-router-dom";
 -A form is shown with the appropriate fields for creating a new deck.
 -The name field is an <input> field of type text.
 -The description field is a <textarea> field that can be multiple lines of text.
-If the user clicks "submit", the user is taken to the Deck screen.
-If the user clicks "cancel", the user is taken to the Home screen.
+-If the user clicks "submit", the user is taken to the Deck screen.
+-If the user clicks "cancel", the user is taken to the Home screen.
 Create better layout, to match layout of example
 Make the description area multiple rows
 */
@@ -19,6 +19,7 @@ function CreateDeck() {
   const initialFormState = { name: "", description: "" };
   // useState to handle the change when inputting into the fields
   const [formData, setFormData] = useState({...initialFormState});
+    const history = useHistory();
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -33,7 +34,6 @@ function CreateDeck() {
     console.log("Submitted:", formData);
     setFormData({ ...initialFormState });
 };
-
 
 
   return (
@@ -57,11 +57,12 @@ function CreateDeck() {
       <div>
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">
-            Deck Name:
+            Name:
             <input
               id="name"
               type="text"
               name="name"
+              placeholder="Deck Name"
               onChange={handleChange}
               value={formData.name}
             />
@@ -72,13 +73,14 @@ function CreateDeck() {
               id="description"
               type="textarea"
               name="description"
+              placeholder="Brief description of the deck"
               onChange={handleChange}
               value={formData.description}
             />
           </label>
           <div>
-          <button type="button">Cancel</button>
-          <button type="submit">Submit</button>
+          <button type="button" className="btn btn-secondary m-2" onClick={() => history.push("/")}>Cancel</button>
+          <button type="submit" className="btn btn-primary m-2" onClick={() => history.push("/decks/:deckId")}>Submit</button>
 
           </div>
         </form>
