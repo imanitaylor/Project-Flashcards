@@ -1,3 +1,5 @@
+//Completed
+
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { readDeck, updateDeck } from "../src/utils/api";
@@ -9,8 +11,8 @@ import { readDeck, updateDeck } from "../src/utils/api";
 -You must use the readDeck() function from src/utils/api/index.js to load the existing deck.
 -There is a breadcrumb navigation bar with a link to home /, followed by the name of the deck being edited, and finally the text Edit Deck (e.g., Home/Rendering in React/Edit Deck).
 -It displays the same form as the Create Deck screen
-except it is pre-filled with information for the existing deck.
-The user can edit and update the form.
+-except it is pre-filled with information for the existing deck.
+-The user can edit and update the form.
 -If the user clicks "Cancel", the user is taken to the Deck screen.
 
 */
@@ -22,18 +24,22 @@ function EditDeck() {
   const ac = new AbortController();
 
 
-  const loadDeck = () => {
-    readDeck(deckId).then(setDeck).catch(console.error);
-  };
+//   const loadDeck = () => {
+//     readDeck(deckId).then(setDeck).catch(console.error);
+//   };
+
 
   useEffect(() => {
     setDeck([]);
-    loadDeck();
+    readDeck(deckId).then((newDeck)=>{
+        setDeck(newDeck)
+        (setFormData({...newDeck}))
+    }).catch(console.error);
     return () => ac.abort();
   }, [setDeck, deckId]);
 
 
-  const initialFormState = { name: `${deck.name}`, description:`${deck.description}` };
+  const initialFormState = { name:"", description: "" };
   // useState to handle the change when inputting into the fields
   const [formData, setFormData] = useState({ ...initialFormState });
 
@@ -48,8 +54,7 @@ function EditDeck() {
   const handleSubmit = (event) => {
     event.preventDefault();
     updateDeck(formData)
-      .then(setFormData({ ...initialFormState }))
-      .then(history.push("/decks/:deckId"))
+    .then((newDeck)=>history.push(`/decks/${newDeck.id}`))
       .catch(console.error);
   };
 
