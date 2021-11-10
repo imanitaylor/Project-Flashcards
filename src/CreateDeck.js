@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 /*
 // allows the user to create a new deck
@@ -11,15 +11,15 @@ import { Link, useHistory, useParams } from "react-router-dom";
 -The description field is a <textarea> field that can be multiple lines of text.
 -If the user clicks "submit", the user is taken to the Deck screen.
 -If the user clicks "cancel", the user is taken to the Home screen.
-Create better layout, to match layout of example
-Make the description area multiple rows
+-Create better layout, to match layout of example
+-Make the description area multiple rows
 */
 
 function CreateDeck() {
   const initialFormState = { name: "", description: "" };
   // useState to handle the change when inputting into the fields
-  const [formData, setFormData] = useState({...initialFormState});
-    const history = useHistory();
+  const [formData, setFormData] = useState({ ...initialFormState });
+  const history = useHistory();
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -28,13 +28,11 @@ function CreateDeck() {
     });
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Submitted:", formData);
     setFormData({ ...initialFormState });
-};
-
+  };
 
   return (
     <div className="container">
@@ -56,32 +54,49 @@ function CreateDeck() {
       </div>
       <div>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name">
-            Name:
-            <input
-              id="name"
-              type="text"
-              name="name"
-              placeholder="Deck Name"
-              onChange={handleChange}
-              value={formData.name}
-            />
-          </label>
-          <label htmlFor="description">
-          Description:
-            <input
-              id="description"
-              type="textarea"
-              name="description"
-              placeholder="Brief description of the deck"
-              onChange={handleChange}
-              value={formData.description}
-            />
-          </label>
           <div>
-          <button type="button" className="btn btn-secondary m-2" onClick={() => history.push("/")}>Cancel</button>
-          <button type="submit" className="btn btn-primary m-2" onClick={() => history.push("/decks/:deckId")}>Submit</button>
-
+            <label htmlFor="name" style={{ width: "100%" }}>
+              <h6>Name</h6>
+              <input
+                style={{ width: "100%" }}
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Deck Name"
+                onChange={handleChange}
+                value={formData.name}
+              />
+            </label>
+          </div>
+          <div>
+            <label htmlFor="description" style={{ width: "100%" }}>
+              <h6>Description</h6>
+              <textarea
+                style={{ width: "100%" }}
+                id="description"
+                name="description"
+                rows={5}
+                placeholder="Brief description of the deck"
+                onChange={handleChange}
+                value={formData.description}
+              />
+            </label>
+          </div>
+          <div>
+            <button
+              type="button"
+              className="btn btn-secondary m-2"
+              onClick={() => history.push("/")}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary m-2"
+              onClick={() => history.push("/decks/:deckId")}
+            >
+              Submit
+            </button>
           </div>
         </form>
       </div>
