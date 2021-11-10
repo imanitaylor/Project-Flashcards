@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Route, Switch, Link, useParams, useHistory } from "react-router-dom";
-import { readDeck, deleteDeck } from "../src/utils/api";
+import { readDeck, deleteDeck, deleteCard } from "../src/utils/api";
 
 /*
 shows all th info about a specific deck ith options to edit card, or add card, navigate to study screen or delete a deck
@@ -24,19 +24,26 @@ You must use the readDeck() function from src/utils/api/index.js to load the exi
 
 Each card in the deck:
 
-is listed on the page under the "Cards" heading.
-shows a question and the answer to the question.
-has an “Edit” button that takes the user to the Edit Card screen when clicked.
-has a “Delete” button that allows that card to be deleted.
+-is listed on the page under the "Cards" heading.
+-shows a question and the answer to the question.
+-has an “Edit” button that takes the user to the Edit Card screen when clicked.
+-has a “Delete” button that allows that card to be deleted.
 */
 function Deck(){
-    const [deck, setDeck] = useState({});
+const [deck, setDeck] = useState({});
   const { deckId } = useParams();
   const history = useHistory();
+  const ac = new AbortController();
+
+  const loadDeck = () => {
+    readDeck(deckId).then(setDeck).catch(console.error);
+  };
 
   useEffect(() => {
-    readDeck(deckId).then(setDeck).catch(console.error);
-  }, [deckId]);
+    setDeck([]);
+    loadDeck();
+    return () => ac.abort();
+  }, [setDeck, deckId]);
 
 
   const handleDelete = (deckId) => {
@@ -44,9 +51,56 @@ function Deck(){
       "Delete this deck? \n\nYou will not be able to recover it."
     );
     if (result === true) {
-      deleteDeck(deckId);
+        deleteDeck(deckId).then(history.push("/"));
     }
   };
+
+  const handleCardDelete = (cardId) => {
+    const result = window.confirm(
+      "Delete this card? \n\nYou will not be able to recover it."
+    );
+    if (result === true) {
+        deleteCard(cardId).then(loadDeck);
+    }
+  };
+
+
+  if(!deck.name)return <h3>Shuffling your deck</h3>
+
+  const cards = deck.cards.map((card)=>{
+return(
+    <div className="card m-3" style={{ width: "100%" }}>
+  <div className="card-body row">
+      <div className="col">
+    <p className="card-text">{card.front}</p>
+    </div>
+    <div className="col">
+    <p className="card-text">{card.back}</p>
+    <div className="d-flex justify-content-end">
+    <button
+              type="button"
+              className="btn btn-secondary m-2"
+              onClick={() => history.push(`/decks/${deck.id}/cards/${card.id}/edit`)}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger m-2"
+              onClick={() => handleCardDelete(card.id)}
+            >
+              Delete
+            </button>
+            </div>
+            </div>
+  </div>
+</div>
+)
+
+
+  })
+ 
+
 
 return (
 
@@ -67,7 +121,7 @@ return (
         <div>
             <p>{deck.description}</p>
         </div>
-        <div className="row">
+        <div className="row mb-3">
             <div className="col">
         <button
               type="button"
@@ -83,13 +137,13 @@ return (
             >
               Study
             </button>
-            <Link
-                to={`/decks/${deck.id}/cards/new`}
-                className="btn btn-primary m-2"
-              >
-                Add Cards
-              </Link>
-            
+            <button
+              type="button"
+              className="btn btn-primary m-2"
+              onClick={() => history.push(`/decks/${deck.id}/cards/new`)}
+            >
+              Add Cards
+            </button>
             </div>
             <div>
             <button
@@ -97,10 +151,13 @@ return (
               className="btn btn-danger m-2"
               onClick={() => handleDelete(deck.id)}
             >
-              D
+              Delete
             </button>
             </div>
+            
         </div>
+        <div><h4>Cards</h4></div>
+        <div>{cards}</div>
       </div>
 )
 
