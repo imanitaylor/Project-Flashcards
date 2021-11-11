@@ -23,15 +23,14 @@ function EditCard(){
     const [card, setCard] = useState({});
     const { deckId } = useParams();
     const { cardId } = useParams();
-    const ac = new AbortController();
     const initialFormState = { front: "", back: "" };
     const [formData, setFormData] = useState({ ...initialFormState });
     const history = useHistory();
+    
 
       useEffect(() => {
         setDeck([]);
         readDeck(deckId).then(setDeck).catch(console.error);
-        return () => ac.abort();
       }, [setDeck, deckId]);
 
 
@@ -42,7 +41,6 @@ function EditCard(){
             setCard(newCard)
             (setFormData({...newCard}))
         }).catch(console.error);
-        return () => ac.abort();
       }, [setDeck, deckId, cardId]);
 
 
@@ -57,7 +55,7 @@ function EditCard(){
       const handleSubmit = (event) => {
         event.preventDefault();
         updateCard(formData)
-        .then((newCard)=>history.push(`/decks/${newCard.id}`))
+        .then((newCard)=>history.push(`/decks/${deck.id}`))
       .catch(console.error);
         
       };

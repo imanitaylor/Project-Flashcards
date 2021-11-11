@@ -21,28 +21,19 @@ function EditDeck() {
   const [deck, setDeck] = useState({});
   const { deckId } = useParams();
   const history = useHistory();
-  const ac = new AbortController();
-
-
-//   const loadDeck = () => {
-//     readDeck(deckId).then(setDeck).catch(console.error);
-//   };
-
 
   useEffect(() => {
     setDeck([]);
-    readDeck(deckId).then((newDeck)=>{
-        setDeck(newDeck)
-        (setFormData({...newDeck}))
-    }).catch(console.error);
-    return () => ac.abort();
+    readDeck(deckId)
+      .then((newDeck) => {
+        setDeck(newDeck)(setFormData({ ...newDeck }));
+      })
+      .catch(console.error);
   }, [setDeck, deckId]);
 
-
-  const initialFormState = { name:"", description: "" };
+  const initialFormState = { name: "", description: "" };
   // useState to handle the change when inputting into the fields
   const [formData, setFormData] = useState({ ...initialFormState });
-
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -54,7 +45,7 @@ function EditDeck() {
   const handleSubmit = (event) => {
     event.preventDefault();
     updateDeck(formData)
-    .then((newDeck)=>history.push(`/decks/${newDeck.id}`))
+      .then((newDeck) => history.push(`/decks/${newDeck.id}`))
       .catch(console.error);
   };
 
@@ -79,7 +70,9 @@ function EditDeck() {
           </ol>
         </nav>
       </div>
-      <div><h3>Edit Deck</h3></div>
+      <div>
+        <h3>Edit Deck</h3>
+      </div>
       <div>
         <form onSubmit={handleSubmit}>
           <div>
