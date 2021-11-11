@@ -1,7 +1,7 @@
-
+//Completed
 
 import React, { useState, useEffect } from "react";
-import { Route, Switch, Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { readDeck, deleteDeck, deleteCard } from "../src/utils/api";
 
 /*
@@ -10,7 +10,7 @@ shows all th info about a specific deck ith options to edit card, or add card, n
 
 
 -The path to this screen should include the deckId (i.e., /decks/:deckId).
-You must use the readDeck() function from src/utils/api/index.js to load the existing deck.
+-You must use the readDeck() function from src/utils/api/index.js to load the existing deck.
 -There is a breadcrumb navigation bar with a link to home / followed by the name of the deck (e.g., Home/React Router).
 -The screen includes the deck name (e.g., "React Router") and deck description (e.g., "React Router is a collection of navigational components that compose declaratively in your application").
 -The screen includes "Edit", "Study", "Add Cards", and "Delete" buttons. Each button takes the user to a different destination, as follows:
@@ -33,7 +33,7 @@ function Deck(){
 const [deck, setDeck] = useState({});
   const { deckId } = useParams();
   const history = useHistory();
-  const ac = new AbortController();
+  
 
   const loadDeck = () => {
     readDeck(deckId).then(setDeck).catch(console.error);
@@ -42,7 +42,6 @@ const [deck, setDeck] = useState({});
   useEffect(() => {
     setDeck([]);
     loadDeck();
-    return () => ac.abort();
   }, [setDeck, deckId]);
 
 

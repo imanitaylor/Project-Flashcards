@@ -13,9 +13,9 @@ import EditCard from "../EditCard";
 function Layout() {
   return (
     <>
+      <Router>
       <Header />
       <div className="container">
-    <Router>
       <Switch>
         <Route exact path="/">
           <Home />
@@ -42,8 +42,8 @@ function Layout() {
           <NotFound />
         </Route>
       </Switch>
-    </Router>
       </div>
+      </Router>
     </>
   );
 }

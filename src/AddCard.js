@@ -23,7 +23,6 @@ allows user to add an card to an existing deck
 function AddCard() {
     const [deck, setDeck] = useState({});
     const { deckId } = useParams();
-    const ac = new AbortController();
     const initialFormState = { front: "", back: "" };
     const [formData, setFormData] = useState({ ...initialFormState });
     const history = useHistory();
@@ -31,7 +30,6 @@ function AddCard() {
       useEffect(() => {
         setDeck([]);
         readDeck(deckId).then(setDeck).catch(console.error);
-        return () => ac.abort();
       }, [setDeck, deckId]);
 
 
@@ -74,7 +72,7 @@ function AddCard() {
         </nav>
       </div>
       <div>
-        <h4>{deck.name}: Add Card</h4>
+        <h3>{deck.name}: Add Card</h3>
       </div>
 
 

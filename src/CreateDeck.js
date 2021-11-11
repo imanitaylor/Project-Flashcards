@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+//Comp
+
+import React, { useState} from "react";
 import { Link, useHistory } from "react-router-dom";
 import { createDeck } from "../src/utils/api";
 
@@ -31,12 +33,9 @@ function CreateDeck() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const deck = formData;
-    createDeck(deck)
-    .then(setFormData({ ...initialFormState }))
-    .then(history.push("/decks/:deckId"))
-    .catch(console.error)
-    
+    createDeck(formData)
+      .then((newDeck) => history.push(`/decks/${newDeck.id}`))
+      .catch(console.error);
   };
 
   return (
@@ -95,10 +94,7 @@ function CreateDeck() {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="btn btn-primary m-2"
-            >
+            <button type="submit" className="btn btn-primary m-2">
               Submit
             </button>
           </div>
