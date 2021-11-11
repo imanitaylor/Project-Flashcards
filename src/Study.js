@@ -1,5 +1,4 @@
-
-//Completed 
+//Completed
 
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
@@ -45,7 +44,6 @@ function Study() {
       .catch(console.error);
   }, [setDeck, deckId]);
 
-
   const handleFlip = (event) => {
     if (cardSide === "front") {
       setCardSide("back");
@@ -56,90 +54,93 @@ function Study() {
   };
 
   const handleNext = (event) => {
-    if(index < cards.length-1){
-      setIndex((index)=>index+1)
-      setCardSide("front")
-  }else{
-      if(window.confirm("Restart cards? \n\nClick 'cancel' to return to the home page.")){
-        setIndex(0)
-        setCardSide("front")
-      }else{
-          history.push("/")
+    if (index < cards.length - 1) {
+      setIndex((index) => index + 1);
+      setCardSide("front");
+    } else {
+      if (
+        window.confirm(
+          "Restart cards? \n\nClick 'cancel' to return to the home page."
+        )
+      ) {
+        setIndex(0);
+        setCardSide("front");
+      } else {
+        history.push("/");
       }
-  }
-  }
+    }
+  };
 
-
+  const navBar = (
+    <nav aria-label="breadcrumb">
+      <ol className="breadcrumb">
+        <li key="home" className="breadcrumb-item">
+          <Link to="/">Home</Link>
+        </li>
+        <li key="deckName" className="breadcrumb-item">
+          <Link to={`/decks/${deck.id}`}>{deck.name}</Link>
+        </li>
+        <li key="study" className="breadcrumb-item active" aria-current="page">
+          Study
+        </li>
+      </ol>
+    </nav>
+  );
 
   if (!deck.name) return <h3>Shuffling your deck</h3>;
-  const card = deck.cards[index];
-  const studyCard = (
-    <div class="card m-3" style={{ width: "100%" }}>
-      <div class="card-body">
-        <h5 class="card-title">
-          Card {index + 1} of {cards.length}
-        </h5>
-        <p class="card-text">{cardSide === "front" ? card.front : card.back}</p>
+  if (deck.cards.length <= 2) {
+    return (
+      <div className="container">
+        <div>{navBar}</div>
+        <div>
+          <h1>{deck.name}: Study</h1>
+        </div>
+        <h3>Not enough cards.</h3>
+        <p>
+          You need at lesast 3 cards to study. There are {cards.length} cards in
+          this deck.
+        </p>
         <button
           type="button"
-          className="btn btn-secondary m-2"
-          onClick={handleFlip}
+          className="btn btn-primary m-2"
+          onClick={() => history.push(`/decks/${deck.id}/cards/new`)}
         >
-          Flip
+          Add Cards
         </button>
-        {cardSide === "back" && (
-          <button className="btn btn-primary" onClick={handleNext}>Next</button>
-        )}
       </div>
-    </div>
-  );
-
-
-  const lowCards = (
-    <div>
-      <h3>Not enough cards.</h3>
-      <p>You need at lesast 3 cards to study. There are {cards.length} cards in this deck.</p>
-      <button
+    );
+  } else {
+    const card = deck.cards[index];
+    return (
+      <div className="container">
+        <div>{navBar}</div>
+        <div>
+          <h1>{deck.name}: Study</h1>
+        </div>
+        <div class="card m-3" style={{ width: "100%" }}>
+          <div class="card-body">
+            <h5 class="card-title">
+              Card {index + 1} of {cards.length}
+            </h5>
+            <p class="card-text">
+              {cardSide === "front" ? card.front : card.back}
+            </p>
+            <button
               type="button"
-              className="btn btn-primary m-2"
-              onClick={() => history.push(`/decks/${deck.id}/cards/new`)}
+              className="btn btn-secondary m-2"
+              onClick={handleFlip}
             >
-              Add Cards
+              Flip
             </button>
-    </div>
-
-  )
-
-
-  return (
-    <div className="container">
-      <div>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li key="home" className="breadcrumb-item">
-              <Link to="/">Home</Link>
-            </li>
-            <li key="deckName" className="breadcrumb-item">
-              <Link to={`/decks/${deck.id}`}>{deck.name}</Link>
-            </li>
-            <li
-              key="study"
-              className="breadcrumb-item active"
-              aria-current="page"
-            >
-              Study
-            </li>
-          </ol>
-        </nav>
+            {cardSide === "back" && (
+              <button className="btn btn-primary" onClick={handleNext}>
+                Next
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-      <div>
-        <h1>Study: {deck.name}</h1>
-      </div>
-      {cards.length > 2 && (<div>{studyCard}</div>)}
-      {cards.length <= 2 && (<div>{lowCards}</div>)}
-    </div>
-  );
-
-
+    );
+  }
 }
 export default Study;
