@@ -1,8 +1,7 @@
-
-
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { readDeck, readCard, updateCard } from "../src/utils/api";
+import CardForm from "./Layout/CardForm";
 /*
 
 allows user to modify information on an existing card
@@ -17,124 +16,55 @@ allows user to modify information on an existing card
 
 */
 
-function EditCard(){
+function EditCard() {
+  const [deck, setDeck] = useState({});
+  const [card, setCard] = useState({});
+  const { deckId } = useParams();
+  const { cardId } = useParams();
 
-    const [deck, setDeck] = useState({});
-    const [card, setCard] = useState({});
-    const { deckId } = useParams();
-    const { cardId } = useParams();
-    const initialFormState = { front: "", back: "" };
-    const [formData, setFormData] = useState({ ...initialFormState });
-    const history = useHistory();
-    
+  useEffect(() => {
+    setDeck([]);
+    readDeck(deckId).then(setDeck).catch(console.error);
+  }, [setDeck, deckId]);
 
-      useEffect(() => {
-        setDeck([]);
-        readDeck(deckId).then(setDeck).catch(console.error);
-      }, [setDeck, deckId]);
-
-
-
-      useEffect(() => {
-        setCard([]);
-        readCard(cardId).then((newCard)=>{
-            setCard(newCard)
-            (setFormData({...newCard}))
-        }).catch(console.error);
-      }, [setDeck, deckId, cardId]);
-
-
-
-      const handleChange = ({ target }) => {
-        setFormData({
-          ...formData,
-          [target.name]: target.value,
-        });
-      };
-
-      const handleSubmit = (event) => {
-        event.preventDefault();
-        updateCard(formData)
-        .then((newCard)=>history.push(`/decks/${deck.id}`))
+  useEffect(() => {
+    setCard([]);
+    readCard(cardId)
+      .then((newCard) => {
+        setCard(newCard);
+      })
       .catch(console.error);
-        
-      };
+  }, [setDeck, deckId, cardId]);
 
-
-
-
-      return (
-        <div className="container">
-          <div>
-            <nav aria-label="breadcrumb">
-              <ol className="breadcrumb">
-                <li key="home" className="breadcrumb-item">
-                  <Link to="/">Home</Link>
-                </li>
-                <li key="deckName" className="breadcrumb-item">
-                  <Link to={`/decks/${deck.id}`}>{deck.name}</Link>
-                </li>
-                <li
-                  key="createDeck"
-                  className="breadcrumb-item active"
-                  aria-current="page"
-                >
-                  Edit Card {card.id}
-                </li>
-              </ol>
-            </nav>
-          </div>
-          <div>
-            <h3>Edit Card</h3>
-          </div>
-          <div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="front" style={{ width: "100%" }}>
-              <h6>Front</h6>
-              <textarea
-                style={{ width: "100%" }}
-                id="front"
-                name="front"
-                rows={3}
-                onChange={handleChange}
-                value={formData.front}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="back" style={{ width: "100%" }}>
-              <h6>Back</h6>
-              <textarea
-                style={{ width: "100%" }}
-                id="back"
-                name="back"
-                rows={3}
-                onChange={handleChange}
-                value={formData.back}
-              />
-            </label>
-          </div>
-          <div>
-            <button
-              type="button"
-              className="btn btn-secondary m-2"
-              onClick={() => history.push(`/decks/${deck.id}`)}
+  return (
+    <div className="container">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li key="home" className="breadcrumb-item">
+              <Link to="/">Home</Link>
+            </li>
+            <li key="deckName" className="breadcrumb-item">
+              <Link to={`/decks/${deck.id}`}>{deck.name}</Link>
+            </li>
+            <li
+              key="createDeck"
+              className="breadcrumb-item active"
+              aria-current="page"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary m-2"
-            >
-              Save
-            </button>
-          </div>
-        </form>
+              Edit Card {card.id}
+            </li>
+          </ol>
+        </nav>
       </div>
-          </div>
-      )
-
+      <div>
+        <h3>Edit Card</h3>
+      </div>
+      <div>
+        <CardForm card={card} submit="editcard" />
+      </div>
+    </div>
+  );
 }
 
 export default EditCard;

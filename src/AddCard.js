@@ -1,9 +1,9 @@
-//Completed 
+//Completed
 
 import React, { useState, useEffect } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { readDeck, createCard } from "../src/utils/api";
-
+import { Link, useParams } from "react-router-dom";
+import { readDeck } from "../src/utils/api";
+import CardForm from "./Layout/CardForm";
 /*
 
 allows user to add an card to an existing deck
@@ -21,34 +21,13 @@ allows user to add an card to an existing deck
 */
 
 function AddCard() {
-    const [deck, setDeck] = useState({});
-    const { deckId } = useParams();
-    const initialFormState = { front: "", back: "" };
-    const [formData, setFormData] = useState({ ...initialFormState });
-    const history = useHistory();
+  const [deck, setDeck] = useState({});
+  const { deckId } = useParams();
 
-      useEffect(() => {
-        setDeck([]);
-        readDeck(deckId).then(setDeck).catch(console.error);
-      }, [setDeck, deckId]);
-
-
-      const handleChange = ({ target }) => {
-        setFormData({
-          ...formData,
-          [target.name]: target.value,
-        });
-      };
-
-      const handleSubmit = (event) => {
-        event.preventDefault();
-        createCard(deckId, formData)
-        .then(setFormData({ ...initialFormState }))
-        .catch(console.error)
-        
-      };
-
-
+  useEffect(() => {
+    setDeck([]);
+    readDeck(deckId).then(setDeck).catch(console.error);
+  }, [setDeck, deckId]);
 
   return (
     <div className="container">
@@ -74,57 +53,7 @@ function AddCard() {
       <div>
         <h3>{deck.name}: Add Card</h3>
       </div>
-
-
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="front" style={{ width: "100%" }}>
-              <h6>Front</h6>
-              <textarea
-                style={{ width: "100%" }}
-                id="front"
-                name="front"
-                rows={3}
-                placeholder="Front side of card"
-                onChange={handleChange}
-                value={formData.front}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="back" style={{ width: "100%" }}>
-              <h6>Back</h6>
-              <textarea
-                style={{ width: "100%" }}
-                id="back"
-                name="back"
-                rows={3}
-                placeholder="Back side of card"
-                onChange={handleChange}
-                value={formData.back}
-              />
-            </label>
-          </div>
-          <div>
-            <button
-              type="button"
-              className="btn btn-secondary m-2"
-              onClick={() => history.push(`/decks/${deck.id}`)}
-            >
-              Done
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary m-2"
-            >
-              Save
-            </button>
-          </div>
-        </form>
-      </div>
-
-
+      <CardForm submit="addcard" />
     </div>
   );
 }
